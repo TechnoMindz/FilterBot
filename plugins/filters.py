@@ -1,6 +1,7 @@
 import os
 import re
 import io
+import asyncio
 import pyrogram
 
 from pyrogram import filters, Client
@@ -28,7 +29,7 @@ from plugins.helpers import parser,split_quotes
 
 @Client.on_message(filters.command(Config.ADD_FILTER_CMD))
 async def addfilter(client, message):
-
+      
     userid = message.from_user.id
     chat_type = message.chat.type
     args = message.text.html.split(None, 1)
@@ -41,10 +42,10 @@ async def addfilter(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Make sure I'm present in your group!🤔!", quote=True)
+                await message.reply_text("Make sure I'm present in your group!!", quote=True)
                 return
         else:
-            await message.reply_text("I'm not connected to any groups😵‍💫!", quote=True)
+            await message.reply_text("I'm not connected to any groups!", quote=True)
             return
 
     elif (chat_type == "group") or (chat_type == "supergroup"):
@@ -57,17 +58,17 @@ async def addfilter(client, message):
     st = await client.get_chat_member(grp_id, userid)
     if not ((st.status == "administrator") or (st.status == "creator") or (str(userid) in Config.AUTH_USERS)):
         return
-
+        
 
     if len(args) < 2:
-        await message.reply_text("Command Incomplete 🥲", quote=True)
+        await message.reply_text("Command Incomplete :(", quote=True)
         return
-
+    
     extracted = split_quotes(args[1])
     text = extracted[0].lower()
-
+   
     if not message.reply_to_message and len(extracted) < 2:
-        await message.reply_text("Add some content to save your filter🥲!", quote=True)
+        await message.reply_text("Add some content to save your filter!", quote=True)
         return
 
     if (len(extracted) >= 2) and not message.reply_to_message:
@@ -126,7 +127,7 @@ async def addfilter(client, message):
             reply_text = ""
             btn = "[]"
             alert = None
-
+   
     elif message.reply_to_message and message.reply_to_message.document:
         try:
             fileid = message.reply_to_message.document.file_id
@@ -165,7 +166,7 @@ async def addfilter(client, message):
 
     else:
         return
-
+    
     await add_filter(grp_id, text, reply_text, btn, fileid, alert)
 
     await message.reply_text(
@@ -175,13 +176,13 @@ async def addfilter(client, message):
     )
 
 
-@Client.on_message(filters.command("viewfilters"))
+@Client.on_message(filters.command('viewfilters'))
 async def get_all(client, message):
-
+    
     chat_type = message.chat.type
     userid = message.from_user.id
     if chat_type == "private":
-
+        
         grpid = await active_connection(str(userid))
         if grpid is not None:
             grp_id = grpid
@@ -189,10 +190,10 @@ async def get_all(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Make sure I'm present in your group!😒!", quote=True)
+                await message.reply_text("Make sure I'm present in your group!!", quote=True)
                 return
         else:
-            await message.reply_text("I'm not connected to any groups!😤", quote=True)
+            await message.reply_text("I'm not connected to any groups!", quote=True)
             return
 
     elif (chat_type == "group") or (chat_type == "supergroup"):
@@ -213,7 +214,7 @@ async def get_all(client, message):
 
         for text in texts:
             keywords = " ×  `{}`\n".format(text)
-
+            
             filterlist += keywords
 
         if len(filterlist) > 4096:
@@ -232,7 +233,7 @@ async def get_all(client, message):
         quote=True,
         parse_mode="md"
     )
-
+        
 @Client.on_message(filters.command(Config.DELETE_FILTER_CMD))
 async def deletefilter(client, message):
     userid = message.from_user.id
@@ -246,10 +247,10 @@ async def deletefilter(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Make sure I'm present in your group!😒!", quote=True)
+                await message.reply_text("Make sure I'm present in your group!!", quote=True)
                 return
         else:
-            await message.reply_text("I'm not connected to any groups!🥲", quote=True)
+            await message.reply_text("I'm not connected to any groups!", quote=True)
 
     elif (chat_type == "group") or (chat_type == "supergroup"):
         grp_id = message.chat.id
@@ -276,7 +277,7 @@ async def deletefilter(client, message):
     query = text.lower()
 
     await delete_filter(message, query, grp_id)
-
+        
 
 @Client.on_message(filters.command(Config.DELETE_ALL_CMD))
 async def delallconfirm(client, message):
@@ -291,10 +292,10 @@ async def delallconfirm(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Make sure I'm present in your group!😒!", quote=True)
+                await message.reply_text("Make sure I'm present in your group!!", quote=True)
                 return
         else:
-            await message.reply_text("I'm not connected to any groups!🥲", quote=True)
+            await message.reply_text("I'm not connected to any groups!", quote=True)
             return
 
     elif (chat_type == "group") or (chat_type == "supergroup"):
@@ -307,16 +308,16 @@ async def delallconfirm(client, message):
     st = await client.get_chat_member(grp_id, userid)
     if (st.status == "creator") or (str(userid) in Config.AUTH_USERS):
         await message.reply_text(
-            f"This will delete all filters from '{title}'.\nDo you want to continue💀??",
+            f"This will delete all filters from '{title}'.\nDo you want to continue??",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton(text="DESTROY EVERYTHING",callback_data="delallconfirm")],
-                [InlineKeyboardButton(text="ABORT",callback_data="delallcancel")]
+                [InlineKeyboardButton(text="YES",callback_data="delallconfirm")],
+                [InlineKeyboardButton(text="CANCEL",callback_data="delallcancel")]
             ]),
             quote=True
         )
 
 
-@Client.on_message(filters.group & filters.text)
+@Client.on_message((filters.private | filters.group) & filters.text)
 async def give_filter(client,message):
     group_id = message.chat.id
     name = message.text
@@ -338,28 +339,28 @@ async def give_filter(client,message):
                         else:
                             button = eval(btn)
                             await message.reply_text(
-                                reply_text,
-                                disable_web_page_preview=True,
-                                reply_markup=InlineKeyboardMarkup(button)
+                                 reply_text,
+                                 disable_web_page_preview=True,
+                                 reply_markup=InlineKeyboardMarkup(button)
                             )
-                    else:
+                        else:
                         if btn == "[]":
                             await message.reply_cached_media(
-                                fileid,
-                                caption=reply_text or ""
+                                 fileid,
+                                 caption=reply_text or ""
                             )
                         else:
                             button = eval(btn) 
                             await message.reply_cached_media(
-                                fileid,
-                                caption=reply_text or "",
-                                reply_markup=InlineKeyboardMarkup(button)
+                                 fileid,
+                                 caption=reply_text or "",
+                                 reply_markup=InlineKeyboardMarkup(button)
                             )
                 except Exception as e:
                     print(e)
                     pass
                 break 
-
+                
     if Config.SAVE_USER == "yes":
         try:
             await add_user(
