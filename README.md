@@ -92,5 +92,6 @@
 
 ## Thanks to 
 
- - Thanks To [Ravinandan](https://github.com/TechnoMindz) for Their Awesome [Unlimited Filter Bot]
+ - Thanks To [꧁𓊈𒆜🆁🅰🆅🅸🅽🅰🅽🅳🅰🅽𒆜𓊉꧂](https://t.me/TechnoMindzyT) for Their Awesome [Unlimited Filter Bot]
+ - Thanks To [༄ᶦᶰᵈ᭄✿GʀᴇᴀᴛX࿐Hᴀᴄᴋᴇʀ](https://t.me/greatxhacker) Who Helped me in this Journey
 # FilterBot
