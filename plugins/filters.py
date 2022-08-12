@@ -339,21 +339,21 @@ async def give_filter(client,message):
                         else:
                             button = eval(btn)
                             await message.reply_text(
-                                 reply_text,
-                                 disable_web_page_preview=True,
-                                 reply_markup=InlineKeyboardMarkup(button)
+                                reply_text,
+                                disable_web_page_preview=True,
+                                reply_markup=InlineKeyboardMarkup(button)
                             )
-                        else:
+                    else:
                         if btn == "[]":
                             await message.reply_cached_media(
-                                 fileid,
-                                 caption=reply_text or ""
+                                fileid,
+                                caption=reply_text or ""
                             )
                         else:
                             button = eval(btn) 
                             await message.reply_cached_media(
-                                 fileid,
-                                 caption=reply_text or "",
+                                fileid,
+                                caption=reply_text or "",
                                  reply_markup=InlineKeyboardMarkup(button)
                             )
                 except Exception as e:
