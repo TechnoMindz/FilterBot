@@ -1,4 +1,4 @@
-pyrogram==1.4.16
+pyrogram>=2.0.30
 TgCrypto
 pymongo==3.11.4
 dnspython
