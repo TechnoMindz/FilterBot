@@ -2,6 +2,8 @@ import os
 import re
 import pymongo
 
+from pyrogram import filters, Client, enums
+
 if bool(os.environ.get("WEBHOOK", False)):
     from sample_config import Config
 else:
