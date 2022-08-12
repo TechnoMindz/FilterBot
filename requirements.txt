@@ -1,6 +1,6 @@
 pyrogram>=2.0.30
 TgCrypto
-pymongo==3.11.4
+pymongo
 dnspython
 heroku3
 umongo
