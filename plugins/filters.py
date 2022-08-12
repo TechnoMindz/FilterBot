@@ -28,7 +28,7 @@ from plugins.helpers import parser,split_quotes
 
 @Client.on_message(filters.command(Config.ADD_FILTER_CMD))
 async def addfilter(client, message):
-      
+
     userid = message.from_user.id
     chat_type = message.chat.type
     args = message.text.html.split(None, 1)
@@ -57,15 +57,15 @@ async def addfilter(client, message):
     st = await client.get_chat_member(grp_id, userid)
     if not ((st.status == "administrator") or (st.status == "creator") or (str(userid) in Config.AUTH_USERS)):
         return
-        
+
 
     if len(args) < 2:
         await message.reply_text("Command Incomplete 🥲", quote=True)
         return
-    
+
     extracted = split_quotes(args[1])
     text = extracted[0].lower()
-   
+
     if not message.reply_to_message and len(extracted) < 2:
         await message.reply_text("Add some content to save your filter🥲!", quote=True)
         return
@@ -126,7 +126,7 @@ async def addfilter(client, message):
             reply_text = ""
             btn = "[]"
             alert = None
-   
+
     elif message.reply_to_message and message.reply_to_message.document:
         try:
             fileid = message.reply_to_message.document.file_id
@@ -165,7 +165,7 @@ async def addfilter(client, message):
 
     else:
         return
-    
+
     await add_filter(grp_id, text, reply_text, btn, fileid, alert)
 
     await message.reply_text(
@@ -175,14 +175,13 @@ async def addfilter(client, message):
     )
 
 
-@Client.on_message(filters.command(['viewfilters', 'filters']) & filters.incoming)
+@Client.on_message(filters.command('viewfilters'))
 async def get_all(client, message):
-    
+
     chat_type = message.chat.type
-    userid = message.from_user.id if message.from_user else None
-    if not userid:
-        return await message.reply(f"You are anonymous admin. Use /connect {message.chat.id} in PM")
-    if chat_type == enums.ChatType.PRIVATE:
+    userid = message.from_user.id
+    if chat_type == "private":
+
         grpid = await active_connection(str(userid))
         if grpid is not None:
             grp_id = grpid
@@ -190,10 +189,10 @@ async def get_all(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Make sure I'm present in your group!!", quote=True)
+                await message.reply_text("Make sure I'm present in your group!😒!", quote=True)
                 return
         else:
-            await message.reply_text("I'm not connected to any groups!", quote=True)
+            await message.reply_text("I'm not connected to any groups!😤", quote=True)
             return
 
     elif (chat_type == "group") or (chat_type == "supergroup"):
@@ -214,7 +213,7 @@ async def get_all(client, message):
 
         for text in texts:
             keywords = " ×  `{}`\n".format(text)
-            
+
             filterlist += keywords
 
         if len(filterlist) > 4096:
@@ -233,7 +232,7 @@ async def get_all(client, message):
         quote=True,
         parse_mode="md"
     )
-        
+
 @Client.on_message(filters.command(Config.DELETE_FILTER_CMD))
 async def deletefilter(client, message):
     userid = message.from_user.id
@@ -277,7 +276,7 @@ async def deletefilter(client, message):
     query = text.lower()
 
     await delete_filter(message, query, grp_id)
-        
+
 
 @Client.on_message(filters.command(Config.DELETE_ALL_CMD))
 async def delallconfirm(client, message):
@@ -360,7 +359,7 @@ async def give_filter(client,message):
                     print(e)
                     pass
                 break 
-                
+
     if Config.SAVE_USER == "yes":
         try:
             await add_user(
@@ -371,4 +370,3 @@ async def give_filter(client,message):
             )
         except:
             pass
-      
