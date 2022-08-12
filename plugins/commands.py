@@ -220,8 +220,7 @@ async def start(client, message):
                     InlineKeyboardButton("Command Help", callback_data="help_data")
                 ]
             ]
-        ),
-        reply_to_message_id=message.from_user.id
+        )
     )
     if Config.SAVE_USER == "yes":
         try:
@@ -251,8 +250,7 @@ async def help(client, message):
                     InlineKeyboardButton("Support Group", url="https://t.me/Technomindzchat")
                 ]
             ]
-        ),
-        reply_to_message_id=message.from_user.id
+        )
     )
 
 
@@ -272,6 +270,5 @@ async def about(client, message):
                     InlineKeyboardButton("CLOSE", callback_data="close_data"),
                 ]                
             ]
-        ),
-        reply_to_message_id=message.from_user.id
+        )
     )
