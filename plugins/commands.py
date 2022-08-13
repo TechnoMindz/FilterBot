@@ -7,7 +7,7 @@ import heroku3
 import requests
 
 from pyrogram import filters
-from pyrogram import Client as trojanz, filters, enums
+from pyrogram import Client as trojanz
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 if bool(os.environ.get("WEBHOOK", False)):
@@ -25,14 +25,14 @@ from database.users_mdb import add_user, find_user, all_users
 async def showid(client, message):
     chat_type = message.chat.type
 
-    if chat_type == "enums.ChatType.PRIVATE":
+    if chat_type == "private":
         user_id = message.chat.id
         await message.reply_text(
             f"Your ID : `{user_id}`",
-            parse_mode=enums.ParseMode.MARKDOWN,
+            parse_mode="md",
             quote=True
         )
-    elif (chat_type == "enums.ChatType.GROUP") or (chat_type == "enums.ChatType.SUPERGROUP"):
+    elif (chat_type == "group") or (chat_type == "supergroup"):
         user_id = message.from_user.id
         chat_id = message.chat.id
         if message.reply_to_message:
@@ -41,7 +41,7 @@ async def showid(client, message):
             reply_id = ""
         await message.reply_text(
             f"Your ID : `{user_id}`\nThis Group ID : `{chat_id}`\n\n{reply_id}",
-            parse_mode=enums.ParseMode.MARKDOWN,
+            parse_mode="md",
             quote=True
         )   
 
@@ -59,10 +59,10 @@ async def showinfo(client, message):
             try:
                 checkid = int(id)
             except:
-                await message.reply_text("__Enter a valid USER ID__", quote=True, parse_mode=enums.ParseMode.MARKDOWN)
+                await message.reply_text("__Enter a valid USER ID__", quote=True, parse_mode="md")
                 return
         else:
-            await message.reply_text("__Enter a valid USER ID__", quote=True, parse_mode=enums.ParseMode.MARKDOWN)
+            await message.reply_text("__Enter a valid USER ID__", quote=True, parse_mode="md")
             return           
 
         if Config.SAVE_USER == "yes":
@@ -78,7 +78,7 @@ async def showinfo(client, message):
                 pass
 
         if not name:
-            await message.reply_text("__USER Details not found!!__", quote=True, parse_mode=enums.ParseMode.MARKDOWN)
+            await message.reply_text("__USER Details not found!!__", quote=True, parse_mode="md")
             return
     else:
         if message.reply_to_message:
@@ -106,7 +106,7 @@ async def showinfo(client, message):
         f"<b>Permanant USER link</b> : <a href='tg://user?id={id}'>Click here!</a>\n\n"
         f"<b>DC ID</b> : {dcid}\n\n",
         quote=True,
-        parse_mode=enums.ParseMode.HTML
+        parse_mode="html"
     )
 
 
@@ -205,7 +205,7 @@ async def bot_status(client,message):
         f"{quota_details}"
         f"{disk}",
         quote=True,
-        parse_mode=enums.ParseMode.MARKDOWN
+        parse_mode="md"
     )
 
 
@@ -220,7 +220,8 @@ async def start(client, message):
                     InlineKeyboardButton("Command Help", callback_data="help_data")
                 ]
             ]
-        )
+        ),
+        reply_to_message_id=message.message_id
     )
     if Config.SAVE_USER == "yes":
         try:
@@ -250,7 +251,8 @@ async def help(client, message):
                     InlineKeyboardButton("Support Group", url="https://t.me/Technomindzchat")
                 ]
             ]
-        )
+        ),
+        reply_to_message_id=message.message_id
     )
 
 
@@ -270,5 +272,6 @@ async def about(client, message):
                     InlineKeyboardButton("CLOSE", callback_data="close_data"),
                 ]                
             ]
-        )
+        ),
+        reply_to_message_id=message.message_id
     )
