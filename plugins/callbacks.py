@@ -1,7 +1,7 @@
 import os
 import ast
 
-from pyrogram import Client as trojanz, filters, enums
+from pyrogram import Client as trojanz
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 if bool(os.environ.get("WEBHOOK", False)):
@@ -94,7 +94,7 @@ async def cb_handler(client, query):
         userid = query.from_user.id
         chat_type = query.message.chat.type
 
-        if chat_type == "enums.ChatType.PRIVATE":
+        if chat_type == "private":
             grpid  = await active_connection(str(userid))
             if grpid is not None:
                 grp_id = grpid
@@ -111,7 +111,7 @@ async def cb_handler(client, query):
                 )
                 return
 
-        elif (chat_type == "enums.ChatType.GROUP") or (chat_type == "enums.ChatType.SUPERGROUP"):
+        elif (chat_type == "group") or (chat_type == "supergroup"):
             grp_id = query.message.chat.id
             title = query.message.chat.title
 
@@ -119,7 +119,7 @@ async def cb_handler(client, query):
             return
 
         st = await client.get_chat_member(grp_id, userid)
-        if (st.status == "enums.ChatMemberStatus.OWNER") or (str(userid) in Config.AUTH_USERS):    
+        if (st.status == "creator") or (str(userid) in Config.AUTH_USERS):    
             await del_all(query.message, grp_id, title)
         else:
             await query.answer("You need to be Group Owner or an Auth User to do that😒!",show_alert=True)
@@ -128,14 +128,14 @@ async def cb_handler(client, query):
         userid = query.from_user.id
         chat_type = query.message.chat.type
         
-        if chat_type == "enums.ChatType.PRIVATE":
+        if chat_type == "private":
             await query.message.reply_to_message.delete()
             await query.message.delete()
 
-        elif (chat_type == "enums.ChatType.GROUP") or (chat_type == "enums.ChatType.SUPERGROUP"):
+        elif (chat_type == "group") or (chat_type == "supergroup"):
             grp_id = query.message.chat.id
             st = await client.get_chat_member(grp_id, userid)
-            if (st.status == "enums.ChatMemberStatus.OWNER") or (str(userid) in Config.AUTH_USERS):
+            if (st.status == "creator") or (str(userid) in Config.AUTH_USERS):
                 await query.message.delete()
                 try:
                     await query.message.reply_to_message.delete()
@@ -169,7 +169,7 @@ async def cb_handler(client, query):
         await query.message.edit_text(
             f"Group Name : **{title}**\nGroup ID : `{group_id}`",
             reply_markup=keyboard,
-            parse_mode=enums.ParseMode.MARKDOWN
+            parse_mode="md"
         )
         return
 
@@ -185,13 +185,13 @@ async def cb_handler(client, query):
         if mkact:
             await query.message.edit_text(
                 f"Connected to **{title}**",
-                parse_mode=enums.ParseMode.MARKDOWN
+                parse_mode="md"
             )
             return
         else:
             await query.message.edit_text(
                 f"Some error occured!!",
-                parse_mode=enums.ParseMode.MARKDOWN
+                parse_mode="md"
             )
             return
 
@@ -206,13 +206,13 @@ async def cb_handler(client, query):
         if mkinact:
             await query.message.edit_text(
                 f"Disconnected from **{title}**",
-                parse_mode=enums.ParseMode.MARKDOWN
+                parse_mode="md"
             )
             return
         else:
             await query.message.edit_text(
                 f"Some error occured!!",
-                parse_mode=enums.ParseMode.MARKDOWN
+                parse_mode="md"
             )
             return
     elif "deletecb" in query.data:
@@ -231,7 +231,7 @@ async def cb_handler(client, query):
         else:
             await query.message.edit_text(
                 f"Some error occured!!",
-                parse_mode=enums.ParseMode.MARKDOWN
+                parse_mode="md"
             )
             return
     
