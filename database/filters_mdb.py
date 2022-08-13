@@ -1,13 +1,12 @@
 import os
 import re
 import pymongo
-from pyrogram import filters, Client, enums
 
 if bool(os.environ.get("WEBHOOK", False)):
     from sample_config import Config
 else:
     from config import Config
-
+ 
 myclient = pymongo.MongoClient(Config.DATABASE_URI)
 mydb = myclient[Config.DATABASE_NAME]
 
@@ -29,8 +28,8 @@ async def add_filter(grp_id, text, reply_text, btn, file, alert):
         mycol.update_one({'text': str(text)},  {"$set": data}, upsert=True)
     except:
         print('Couldnt save, check your db')
-
-
+             
+     
 async def find_filter(group_id, name):
     mycol = mydb[str(group_id)]
     
@@ -72,25 +71,25 @@ async def delete_filter(message, text, group_id):
     if query == 1:
         mycol.delete_one(myquery)
         await message.reply_text(
-            f"'`{text}`'  deleted. I'll not respond to that filter anymore.",
+            f"'`{text}`'  Deleted Succesfully 😉.",
             quote=True,
-            parse_mode=enums.ParseMode.MARKDOWN
+            parse_mode="md"
         )
     else:
-        await message.reply_text("Couldn't find that filter!", quote=True)
+        await message.reply_text("Couldn't find that filter 🥲!", quote=True)
 
 
 async def del_all(message, group_id, title):
     if str(group_id) not in mydb.list_collection_names():
         await message.edit_text(f"Nothing to remove in {title}!")
         return
-
+        
     mycol = mydb[str(group_id)]
     try:
         mycol.drop()
-        await message.edit_text(f"All filters from {title} has been removed")
+        await message.edit_text(f"All filters from {title} has been removed 😁")
     except:
-        await message.edit_text("Couldn't remove all filters from group!")
+        await message.edit_text(f"Couldn't remove all filters from group!")
         return
 
 
@@ -98,7 +97,10 @@ async def count_filters(group_id):
     mycol = mydb[str(group_id)]
 
     count = mycol.count()
-    return False if count == 0 else count
+    if count == 0:
+        return False
+    else:
+        return count
 
 
 async def filter_stats():
@@ -113,7 +115,7 @@ async def filter_stats():
     for collection in collections:
         mycol = mydb[collection]
         count = mycol.count()
-        totalcount += count
+        totalcount = totalcount + count
 
     totalcollections = len(collections)
 
